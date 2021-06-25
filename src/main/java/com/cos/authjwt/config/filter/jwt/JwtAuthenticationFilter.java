@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.cos.authjwt.domain.user.User;
+import com.cos.authjwt.web.dto.CMRespDto;
 import com.cos.authjwt.web.dto.user.LoginReqDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -65,9 +66,13 @@ public class JwtAuthenticationFilter implements Filter {
 
 			// 헤더 키값 = RFC문서
 			resp.setHeader(JwtProps.HEADER, JwtProps.AUTH + jwtToken);
-			resp.setContentType("text/plain; charset=utf-8");
+			resp.setContentType("application/json; charset=utf-8");
+			
+			CMRespDto<User> cmRespDto = 
+					new CMRespDto<User>(1, "success", new User(1, "ssar", null, "ssar@nate.com", "GUEST"));
+			String cmRespDtoJson = om.writeValueAsString(cmRespDto);
 			PrintWriter out = resp.getWriter();
-			out.print("ok"); // CMRespDto
+			out.print(cmRespDtoJson); // CMRespDto
 			out.flush();
 		}
 		// 3. JWT 토큰 생성 -> (1, guest)
